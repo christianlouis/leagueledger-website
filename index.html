@@ -1,77 +1,488 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>LeagueLedger | Loyalty, events, and rewards for leagues</title>
-    <meta name="description" content="LeagueLedger manages league loyalty programs, event participation, team standings, and QR-code rewards.">
-    <meta property="og:title" content="LeagueLedger">
-    <meta property="og:description" content="Track triumphs, reward participation, and manage league engagement.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.leagueledger.net/">
-    <link rel="canonical" href="https://www.leagueledger.net/">
-    <style>
-      :root { --ink: #172026; --muted: #607080; --line: #d7dee6; --bg: #f4f8fb; --brand: #126b54; --accent: #d89b22; }
-      * { box-sizing: border-box; }
-      body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-      header, section, footer { max-width: 1120px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
-      header { min-height: 86px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-      .brand { font-size: 1.2rem; font-weight: 850; }
-      nav { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-      a { color: var(--brand); text-decoration: none; font-weight: 700; }
-      .button { min-height: 44px; padding: 0 18px; border-radius: 8px; display: inline-flex; align-items: center; color: white; background: var(--brand); }
-      .hero { padding-top: 54px; padding-bottom: 36px; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 44px; align-items: center; }
-      h1 { font-size: clamp(2.4rem, 6vw, 4.8rem); line-height: 1; margin: 0; letter-spacing: 0; }
-      .lead { margin: 24px 0 30px; color: var(--muted); font-size: 1.16rem; line-height: 1.65; max-width: 650px; }
-      .scoreboard { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 24px; box-shadow: 0 24px 50px rgba(23,32,38,.08); }
-      .row { display: grid; grid-template-columns: 36px 1fr auto; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); align-items: center; }
-      .row:last-child { border-bottom: 0; }
-      .rank { width: 36px; height: 36px; border-radius: 50%; background: #eef5f2; display: grid; place-items: center; font-weight: 850; color: var(--brand); }
-      .points { color: var(--accent); font-weight: 850; }
-      section { padding-top: 32px; padding-bottom: 32px; }
-      h2 { font-size: 1.8rem; margin: 0 0 18px; }
-      .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-      .card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 22px; min-height: 156px; }
-      .card h3 { margin: 0 0 10px; }
-      .card p, footer p { margin: 0; color: var(--muted); line-height: 1.55; }
-      footer { margin-top: 24px; padding-top: 28px; padding-bottom: 42px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-      @media (max-width: 820px) { header { align-items: flex-start; flex-direction: column; padding-top: 24px; } .hero { grid-template-columns: 1fr; padding-top: 34px; } .grid { grid-template-columns: 1fr; } }
-    </style>
-  </head>
-  <body>
-    <header>
-      <div class="brand">LeagueLedger</div>
-      <nav aria-label="Primary">
-        <a href="https://github.com/christianlouis/LeagueLedger">GitHub</a>
-        <a class="button" href="https://app.leagueledger.net/">Open app</a>
-      </nav>
-    </header>
-    <main>
-      <section class="hero">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeagueLedger - Pub Quiz Tracking</title>
+  <meta name="description" content="LeagueLedger tracks teams, QR rewards, live standings, and player history for pub quizzes, clubs, leagues, and community events.">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+  <link rel="manifest" href="assets/favicon/site.webmanifest">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'irish-green': '#006837',
+            'golden-ale': '#FFB400',
+            'cream-white': '#F5F0E1',
+            'black-stout': '#1A1A1A',
+            'guinness-red': '#B22222'
+          },
+          fontFamily: {
+            'garamond': ['Garamond', 'Georgia', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+  <nav class="bg-irish-green text-white shadow-md">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex justify-between items-center">
+        <a href="/" class="flex items-center">
+          <img src="assets/logos/monogram.png" alt="LeagueLedger Logo" class="h-12">
+          <span class="ml-2 text-xl font-bold">LeagueLedger</span>
+        </a>
+        <div class="hidden md:flex space-x-6 items-center">
+          <a href="/" class="hover:text-golden-ale transition">Home</a>
+          <a href="https://app.leagueledger.net/teams" class="hover:text-golden-ale transition">Teams</a>
+          <a href="https://app.leagueledger.net/leaderboard" class="hover:text-golden-ale transition">Leaderboard</a>
+          <a href="https://app.leagueledger.net/dashboard/scan" class="hover:text-golden-ale transition">Scan QR Code</a>
+          <a href="https://app.leagueledger.net/auth/login" class="bg-golden-ale hover:bg-opacity-90 text-black-stout px-4 py-2 rounded-md transition">Sign In</a>
+        </div>
+        <button id="mobile-menu-button" class="md:hidden text-white hover:text-golden-ale transition" type="button" aria-label="Open navigation" aria-expanded="false">
+          <i class="fas fa-bars text-2xl" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden mt-3 pb-3 border-t border-irish-green border-opacity-30">
+        <div class="flex flex-col space-y-2 mt-3">
+          <a href="/" class="hover:text-golden-ale transition py-2">Home</a>
+          <a href="https://app.leagueledger.net/teams" class="hover:text-golden-ale transition py-2">Teams</a>
+          <a href="https://app.leagueledger.net/leaderboard" class="hover:text-golden-ale transition py-2">Leaderboard</a>
+          <a href="https://app.leagueledger.net/dashboard/scan" class="hover:text-golden-ale transition py-2">Scan QR Code</a>
+          <a href="https://app.leagueledger.net/auth/login" class="bg-golden-ale hover:bg-opacity-90 text-black-stout px-4 py-2 rounded-md transition text-center">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-grow py-6">
+<div class="ll-landing -my-6" data-ll-lang="en">
+  <section class="ll-hero">
+    <div class="ll-hero__photo" aria-hidden="true">
+      <img src="assets/landing/quiz-night-hero.jpg" alt="">
+    </div>
+    <div class="ll-hero__shade" aria-hidden="true"></div>
+
+    <div class="ll-shell ll-hero__inner">
+      <div class="ll-hero__copy">
+        <div class="ll-hero__brand" aria-label="LeagueLedger">
+          <img src="assets/logos/monogram.png" alt="">
+          <span>LeagueLedger</span>
+        </div>
+        <h1>
+          <span class="ll-copy" data-lang="en">Track every quiz night. Reward every moment.</span>
+          <span class="ll-copy" data-lang="de">Jede Quiznacht erfassen. Jeden Moment belohnen.</span>
+        </h1>
+        <p class="ll-lede">
+          <span class="ll-copy" data-lang="en">LeagueLedger gives pub quizzes, leagues, clubs, and community events one place for teams, QR rewards, live standings, and player history.</span>
+          <span class="ll-copy" data-lang="de">LeagueLedger bringt Pubquizzes, Ligen, Vereine und Community-Events an einen Ort: Teams, QR-Belohnungen, Live-Ranglisten und Spielhistorie.</span>
+        </p>
+
+        <div class="ll-hero__actions" aria-label="Primary actions">
+          <a href="https://app.leagueledger.net/dashboard" class="ll-button ll-button--gold">
+            <span class="ll-copy" data-lang="en">Open app</span>
+            <span class="ll-copy" data-lang="de">App öffnen</span>
+            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+          </a>
+          <a href="https://github.com/christianlouis/LeagueLedger" class="ll-button ll-button--ghost">
+            <span class="ll-copy" data-lang="en">View source</span>
+            <span class="ll-copy" data-lang="de">Quellcode ansehen</span>
+            <i class="fab fa-github" aria-hidden="true"></i>
+          </a>
+        </div>
+
+        <div class="ll-language" role="group" aria-label="Landing page language">
+          <button class="ll-language__button is-active" type="button" data-ll-set-lang="en">EN</button>
+          <button class="ll-language__button" type="button" data-ll-set-lang="de">DE</button>
+        </div>
+      </div>
+
+      <div class="ll-product" aria-label="LeagueLedger product preview">
+        <div class="ll-product__rail">
+          <span class="ll-product__mark">LL</span>
+          <span><i class="fas fa-chart-line" aria-hidden="true"></i></span>
+          <span><i class="fas fa-calendar-alt" aria-hidden="true"></i></span>
+          <span><i class="fas fa-users" aria-hidden="true"></i></span>
+          <span><i class="fas fa-qrcode" aria-hidden="true"></i></span>
+          <span><i class="fas fa-trophy" aria-hidden="true"></i></span>
+        </div>
+        <div class="ll-product__screen">
+          <div class="ll-product__top">
+            <div>
+              <p class="ll-ui-label">
+                <span class="ll-copy" data-lang="en">Dashboard</span>
+                <span class="ll-copy" data-lang="de">Übersicht</span>
+              </p>
+              <h2>
+                <span class="ll-copy" data-lang="en">Welcome back, quiz crew.</span>
+                <span class="ll-copy" data-lang="de">Willkommen zurück, Quizcrew.</span>
+              </h2>
+            </div>
+            <span class="ll-product__period">
+              <span class="ll-copy" data-lang="en">This week</span>
+              <span class="ll-copy" data-lang="de">Diese Woche</span>
+            </span>
+          </div>
+
+          <div class="ll-stats">
+            <div>
+              <span>Events</span>
+              <strong>6</strong>
+            </div>
+            <div>
+              <span>Teams</span>
+              <strong>48</strong>
+            </div>
+            <div>
+              <span>Players</span>
+              <strong>312</strong>
+            </div>
+            <div>
+              <span>Points</span>
+              <strong>12,540</strong>
+            </div>
+          </div>
+
+          <div class="ll-chart" aria-hidden="true">
+            <span style="height: 34%"></span>
+            <span style="height: 46%"></span>
+            <span style="height: 42%"></span>
+            <span style="height: 57%"></span>
+            <span style="height: 66%"></span>
+            <span style="height: 62%"></span>
+            <span style="height: 78%"></span>
+            <span style="height: 89%"></span>
+          </div>
+
+          <div class="ll-product__grid">
+            <div class="ll-mini-panel">
+              <p class="ll-ui-label">
+                <span class="ll-copy" data-lang="en">Recent rewards</span>
+                <span class="ll-copy" data-lang="de">Neue Belohnungen</span>
+              </p>
+              <div class="ll-row"><span>Round on us</span><strong>+750</strong></div>
+              <div class="ll-row"><span>Final table</span><strong>+500</strong></div>
+              <div class="ll-row"><span>Mystery bonus</span><strong>+250</strong></div>
+            </div>
+            <div class="ll-mini-panel ll-leader-mini">
+              <p class="ll-ui-label">Leaderboard</p>
+              <div class="ll-rank"><b>1</b><span>The Think Tank</span><strong>5,520</strong></div>
+              <div class="ll-rank"><b>2</b><span>Quiztopher</span><strong>4,810</strong></div>
+              <div class="ll-rank"><b>3</b><span>Wissensdurst</span><strong>4,210</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ll-proof-strip" aria-label="LeagueLedger highlights">
+    <div class="ll-shell ll-proof-strip__inner">
+      <div><i class="fas fa-qrcode" aria-hidden="true"></i><span><span class="ll-copy" data-lang="en">QR rewards</span><span class="ll-copy" data-lang="de">QR-Belohnungen</span></span></div>
+      <div><i class="fas fa-trophy" aria-hidden="true"></i><span><span class="ll-copy" data-lang="en">Live standings</span><span class="ll-copy" data-lang="de">Live-Ranglisten</span></span></div>
+      <div><i class="fas fa-people-group" aria-hidden="true"></i><span><span class="ll-copy" data-lang="en">Teams & players</span><span class="ll-copy" data-lang="de">Teams & Spieler</span></span></div>
+      <div><i class="fas fa-lock" aria-hidden="true"></i><span>Open Source</span></div>
+    </div>
+  </section>
+
+  <section id="product" class="ll-section ll-section--cream">
+    <div class="ll-shell ll-split ll-split--media-left">
+      <figure class="ll-photo-card">
+        <img src="assets/landing/qr-reward-scan.jpg" alt="A phone scanning a QR reward card on a quiz table">
+      </figure>
+      <div class="ll-section-copy">
+        <h2>
+          <span class="ll-copy" data-lang="en">From quiz round to reward in one scan.</span>
+          <span class="ll-copy" data-lang="de">Von der Quizrunde zur Belohnung mit einem Scan.</span>
+        </h2>
+        <p>
+          <span class="ll-copy" data-lang="en">Create QR codes for rounds, bonuses, events, and partner rewards. Players scan, points land in their profile, and the league table updates without spreadsheet cleanup.</span>
+          <span class="ll-copy" data-lang="de">Erstelle QR-Codes für Runden, Boni, Events und Partner-Rewards. Spieler scannen, Punkte landen im Profil und die Tabelle aktualisiert sich ohne Tabellenchaos.</span>
+        </p>
+        <div class="ll-feature-list">
+          <div><i class="fas fa-circle-check" aria-hidden="true"></i><span><span class="ll-copy" data-lang="en">Single-use and reusable reward codes</span><span class="ll-copy" data-lang="de">Einmalige und wiederverwendbare Reward-Codes</span></span></div>
+          <div><i class="fas fa-circle-check" aria-hidden="true"></i><span><span class="ll-copy" data-lang="en">Team and individual point history</span><span class="ll-copy" data-lang="de">Punktehistorie für Teams und Einzelspieler</span></span></div>
+          <div><i class="fas fa-circle-check" aria-hidden="true"></i><span><span class="ll-copy" data-lang="en">Fast mobile scanning for venue nights</span><span class="ll-copy" data-lang="de">Schnelles mobiles Scannen am Veranstaltungsort</span></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ll-section ll-section--white">
+    <div class="ll-shell">
+      <div class="ll-section-heading">
+        <h2>
+          <span class="ll-copy" data-lang="en">How LeagueLedger works</span>
+          <span class="ll-copy" data-lang="de">So funktioniert LeagueLedger</span>
+        </h2>
+        <p>
+          <span class="ll-copy" data-lang="en">A lightweight flow for organizers, players, and every recurring league night.</span>
+          <span class="ll-copy" data-lang="de">Ein schlanker Ablauf für Veranstalter, Spieler und jede wiederkehrende Liga-Nacht.</span>
+        </p>
+      </div>
+
+      <div class="ll-steps">
+        <article>
+          <span>1</span>
+          <i class="fas fa-calendar-plus" aria-hidden="true"></i>
+          <h3>
+            <span class="ll-copy" data-lang="en">Run your event</span>
+            <span class="ll-copy" data-lang="de">Event starten</span>
+          </h3>
+          <p>
+            <span class="ll-copy" data-lang="en">Create events, invite teams, and keep attendance and points in one place.</span>
+            <span class="ll-copy" data-lang="de">Erstelle Events, lade Teams ein und verwalte Teilnahme und Punkte zentral.</span>
+          </p>
+        </article>
+        <article>
+          <span>2</span>
+          <i class="fas fa-gift" aria-hidden="true"></i>
+          <h3>
+            <span class="ll-copy" data-lang="en">Award points</span>
+            <span class="ll-copy" data-lang="de">Punkte vergeben</span>
+          </h3>
+          <p>
+            <span class="ll-copy" data-lang="en">Use QR codes for wins, challenges, check-ins, rewards, or mystery bonuses.</span>
+            <span class="ll-copy" data-lang="de">Nutze QR-Codes für Siege, Challenges, Check-ins, Rewards oder Mystery-Boni.</span>
+          </p>
+        </article>
+        <article>
+          <span>3</span>
+          <i class="fas fa-trophy" aria-hidden="true"></i>
+          <h3>
+            <span class="ll-copy" data-lang="en">Climb the table</span>
+            <span class="ll-copy" data-lang="de">Tabelle erobern</span>
+          </h3>
+          <p>
+            <span class="ll-copy" data-lang="en">Teams follow live standings and bring the rivalry back next week.</span>
+            <span class="ll-copy" data-lang="de">Teams verfolgen Live-Ranglisten und bringen die Rivalität nächste Woche zurück.</span>
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="ll-section ll-section--green">
+    <div class="ll-shell ll-split">
+      <div class="ll-section-copy">
+        <h2>
+          <span class="ll-copy" data-lang="en">Built for organizers who need the night to run smoothly.</span>
+          <span class="ll-copy" data-lang="de">Gebaut für Veranstalter, die einen reibungslosen Abend brauchen.</span>
+        </h2>
+        <p>
+          <span class="ll-copy" data-lang="en">LeagueLedger covers the operational pieces around recurring competition: team setup, joins, QR generation, admin views, OAuth login, profiles, and standings.</span>
+          <span class="ll-copy" data-lang="de">LeagueLedger deckt die Organisation wiederkehrender Wettbewerbe ab: Team-Setup, Beitritte, QR-Erstellung, Admin-Ansichten, OAuth-Login, Profile und Ranglisten.</span>
+        </p>
+        <div class="ll-columns">
+          <div>
+            <h3>
+              <span class="ll-copy" data-lang="en">Organizer tools</span>
+              <span class="ll-copy" data-lang="de">Tools für Veranstalter</span>
+            </h3>
+            <ul>
+              <li><span class="ll-copy" data-lang="en">Team approvals and member management</span><span class="ll-copy" data-lang="de">Teamfreigaben und Mitgliederverwaltung</span></li>
+              <li><span class="ll-copy" data-lang="en">QR campaigns for points and rewards</span><span class="ll-copy" data-lang="de">QR-Kampagnen für Punkte und Belohnungen</span></li>
+              <li><span class="ll-copy" data-lang="en">Admin dashboard and user oversight</span><span class="ll-copy" data-lang="de">Admin-Dashboard und Nutzerüberblick</span></li>
+            </ul>
+          </div>
+          <div>
+            <h3>
+              <span class="ll-copy" data-lang="en">Player experience</span>
+              <span class="ll-copy" data-lang="de">Spielerlebnis</span>
+            </h3>
+            <ul>
+              <li><span class="ll-copy" data-lang="en">Join teams from any device</span><span class="ll-copy" data-lang="de">Teams von jedem Gerät beitreten</span></li>
+              <li><span class="ll-copy" data-lang="en">Scan rewards after each round</span><span class="ll-copy" data-lang="de">Belohnungen nach jeder Runde scannen</span></li>
+              <li><span class="ll-copy" data-lang="en">Track achievements and rank movement</span><span class="ll-copy" data-lang="de">Erfolge und Rangbewegungen verfolgen</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <figure class="ll-photo-card ll-photo-card--stacked">
+        <img src="assets/landing/organizer-dashboard.jpg" alt="A quiz organizer reviewing dashboard analytics on a laptop">
+      </figure>
+    </div>
+  </section>
+
+  <section class="ll-section ll-section--cream ll-showcase">
+    <div class="ll-shell">
+      <div class="ll-section-heading">
+        <h2>
+          <span class="ll-copy" data-lang="en">What the thing is about</span>
+          <span class="ll-copy" data-lang="de">Worum es bei LeagueLedger geht</span>
+        </h2>
+        <p>
+          <span class="ll-copy" data-lang="en">A league memory layer for real-world communities: pub quizzes, sports clubs, student groups, bar leagues, and recurring venue events.</span>
+          <span class="ll-copy" data-lang="de">Eine Liga-Historie für echte Communities: Pubquizzes, Sportvereine, Hochschulgruppen, Bar-Ligen und wiederkehrende Venue-Events.</span>
+        </p>
+      </div>
+
+      <div class="ll-showcase__grid">
+        <article>
+          <i class="fas fa-users" aria-hidden="true"></i>
+          <h3><span class="ll-copy" data-lang="en">Community leagues</span><span class="ll-copy" data-lang="de">Community-Ligen</span></h3>
+          <p><span class="ll-copy" data-lang="en">Keep teams invested across weeks, seasons, and special events.</span><span class="ll-copy" data-lang="de">Halte Teams über Wochen, Saisons und Sonder-Events hinweg dabei.</span></p>
+        </article>
+        <article>
+          <i class="fas fa-medal" aria-hidden="true"></i>
+          <h3><span class="ll-copy" data-lang="en">Rewards and loyalty</span><span class="ll-copy" data-lang="de">Rewards und Loyalität</span></h3>
+          <p><span class="ll-copy" data-lang="en">Turn participation, wins, and venue moments into trackable rewards.</span><span class="ll-copy" data-lang="de">Mache Teilnahme, Siege und Venue-Momente zu messbaren Belohnungen.</span></p>
+        </article>
+        <article>
+          <i class="fas fa-language" aria-hidden="true"></i>
+          <h3>Deutsch / English</h3>
+          <p><span class="ll-copy" data-lang="en">Serve mixed-language communities with a landing page that speaks both.</span><span class="ll-copy" data-lang="de">Sprich gemischte Communities mit einer Landingpage in beiden Sprachen an.</span></p>
+        </article>
+        <article>
+          <i class="fas fa-code-branch" aria-hidden="true"></i>
+          <h3><span class="ll-copy" data-lang="en">Open deployment</span><span class="ll-copy" data-lang="de">Offenes Deployment</span></h3>
+          <p><span class="ll-copy" data-lang="en">Run it with Docker, Railway, or a VPS. The code is transparent.</span><span class="ll-copy" data-lang="de">Betreibe es mit Docker, Railway oder VPS. Der Code ist transparent.</span></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="open-source" class="ll-open-source">
+    <div class="ll-shell ll-open-source__inner">
+      <div>
+        <h2>
+          <span class="ll-copy" data-lang="en">Open source. Built for communities.</span>
+          <span class="ll-copy" data-lang="de">Open Source. Gebaut für Communities.</span>
+        </h2>
+        <p>
+          <span class="ll-copy" data-lang="en">LeagueLedger is transparent, self-hostable, and designed for organizers who want control over their league data and event workflow.</span>
+          <span class="ll-copy" data-lang="de">LeagueLedger ist transparent, selbst hostbar und für Veranstalter gedacht, die ihre Liga-Daten und Event-Abläufe kontrollieren möchten.</span>
+        </p>
+      </div>
+      <div class="ll-deploy">
+        <span><i class="fab fa-docker" aria-hidden="true"></i> Docker</span>
+        <span><i class="fas fa-cloud" aria-hidden="true"></i> Railway</span>
+        <span><i class="fas fa-server" aria-hidden="true"></i> VPS</span>
+      </div>
+      <div class="ll-open-source__actions">
+        <a href="https://github.com/christianlouis/LeagueLedger" class="ll-button ll-button--outline">
+          <i class="fab fa-github" aria-hidden="true"></i>
+          <span>GitHub</span>
+        </a>
+        <a href="https://github.com/christianlouis/LeagueLedger/tree/main/docs" class="ll-button ll-button--outline">
+          <i class="fas fa-book-open" aria-hidden="true"></i>
+          <span>Docs</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="ll-final-cta">
+    <div class="ll-shell">
+      <img src="assets/logos/emblem.png" alt="" aria-hidden="true">
+      <h2>
+        <span class="ll-copy" data-lang="en">Ready to level up your quiz nights?</span>
+        <span class="ll-copy" data-lang="de">Bereit, eure Quiznächte aufzuwerten?</span>
+      </h2>
+      <p>
+        <span class="ll-copy" data-lang="en">Track every quiz night, reward every moment, and keep the leaderboard alive between events.</span>
+        <span class="ll-copy" data-lang="de">Erfasst jede Quiznacht, belohnt jeden Moment und haltet die Rangliste zwischen den Events lebendig.</span>
+      </p>
+      <div class="ll-hero__actions">
+        <a href="https://app.leagueledger.net/auth/register" class="ll-button ll-button--gold">
+          <span class="ll-copy" data-lang="en">Create account</span>
+          <span class="ll-copy" data-lang="de">Account erstellen</span>
+        </a>
+        <a href="https://app.leagueledger.net/leaderboard" class="ll-button ll-button--ghost">
+          <span class="ll-copy" data-lang="en">See leaderboard</span>
+          <span class="ll-copy" data-lang="de">Rangliste ansehen</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
+  </main>
+
+  <footer class="bg-black-stout text-cream-white py-8 mt-auto">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between gap-8">
         <div>
-          <h1>Track participation. Reward momentum.</h1>
-          <p class="lead">LeagueLedger helps leagues and event organizers manage teams, loyalty points, QR-code rewards, and standings from one focused web application.</p>
-          <a class="button" href="https://app.leagueledger.net/">Open production instance</a>
+          <div class="flex items-center mb-4">
+            <img src="assets/logos/monogram.png" alt="LeagueLedger Logo" class="h-12">
+            <span class="ml-2 text-xl font-bold">LeagueLedger</span>
+          </div>
+          <p class="text-sm">The open source platform for league loyalty programs and quiz communities.</p>
         </div>
-        <aside class="scoreboard" aria-label="Example league standings">
-          <div class="row"><span class="rank">1</span><strong>North Stand</strong><span class="points">840</span></div>
-          <div class="row"><span class="rank">2</span><strong>Quiz Kings</strong><span class="points">790</span></div>
-          <div class="row"><span class="rank">3</span><strong>Late Entries</strong><span class="points">735</span></div>
-          <div class="row"><span class="rank">4</span><strong>Bonus Round</strong><span class="points">690</span></div>
-        </aside>
-      </section>
-      <section>
-        <h2>What it manages</h2>
-        <div class="grid">
-          <article class="card"><h3>Teams and members</h3><p>Maintain profiles, teams, participation history, and OAuth-backed access.</p></article>
-          <article class="card"><h3>QR-code rewards</h3><p>Create redemption flows for attendance, promotions, rewards, and league events.</p></article>
-          <article class="card"><h3>Leaderboards</h3><p>Surface standings and progress in a way participants can understand at a glance.</p></article>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+          <div>
+            <h3 class="text-golden-ale font-bold mb-4">Product</h3>
+            <ul class="space-y-2">
+              <li><a href="https://app.leagueledger.net/teams" class="hover:text-golden-ale transition">Teams</a></li>
+              <li><a href="https://app.leagueledger.net/leaderboard" class="hover:text-golden-ale transition">Leaderboard</a></li>
+              <li><a href="https://app.leagueledger.net/dashboard/scan" class="hover:text-golden-ale transition">QR Scanner</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-golden-ale font-bold mb-4">Account</h3>
+            <ul class="space-y-2">
+              <li><a href="https://app.leagueledger.net/auth/login" class="hover:text-golden-ale transition">Sign In</a></li>
+              <li><a href="https://app.leagueledger.net/auth/register" class="hover:text-golden-ale transition">Register</a></li>
+              <li><a href="https://app.leagueledger.net/dashboard" class="hover:text-golden-ale transition">Dashboard</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-golden-ale font-bold mb-4">Legal</h3>
+            <ul class="space-y-2">
+              <li><a href="https://app.leagueledger.net/about" class="hover:text-golden-ale transition">About</a></li>
+              <li><a href="mailto:christianlouis.com" class="hover:text-golden-ale transition">Contact</a></li>
+              <li><a href="https://app.leagueledger.net/privacy" class="hover:text-golden-ale transition">Privacy</a></li>
+              <li><a href="https://app.leagueledger.net/impressum" class="hover:text-golden-ale transition">Imprint</a></li>
+            </ul>
+          </div>
         </div>
-      </section>
-    </main>
-    <footer>
-      <p>LeagueLedger is an open-source project by Christian Krakau-Louis.</p>
-      <p><a href="mailto:christianlouis@gmail.com">Contact</a> · <a href="https://github.com/christianlouis/LeagueLedger">Source</a></p>
-    </footer>
-  </body>
+      </div>
+      <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-3">
+        <p class="text-sm">&copy; 2026 LeagueLedger. Licensed under Apache License 2.0</p>
+        <a href="https://github.com/christianlouis/LeagueLedger" class="text-sm hover:text-golden-ale transition">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('mobile-menu-button').addEventListener('click', function() {
+      const menu = document.getElementById('mobile-menu');
+      const isHidden = menu.classList.toggle('hidden');
+      this.setAttribute('aria-expanded', String(!isHidden));
+    });
+  </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const landing = document.querySelector('.ll-landing');
+    if (!landing) return;
+
+    const buttons = landing.querySelectorAll('[data-ll-set-lang]');
+    const setLanguage = (language) => {
+      landing.dataset.llLang = language;
+      buttons.forEach((button) => {
+        button.classList.toggle('is-active', button.dataset.llSetLang === language);
+        button.setAttribute('aria-pressed', String(button.dataset.llSetLang === language));
+      });
+    };
+
+    const browserLanguage = (navigator.language || '').toLowerCase().startsWith('de') ? 'de' : 'en';
+    setLanguage(browserLanguage);
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => setLanguage(button.dataset.llSetLang));
+    });
+  });
+</script>
+</body>
 </html>
